@@ -1,5 +1,6 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const bodyParser = require("body-parser");
 
 
 const app = express();
@@ -13,6 +14,11 @@ app.use(express.static("public"));
 app.use(expressLayouts);
 
 app.set("layout", "layout.ejs");
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 
 // ROUTES -------------------------------------------
 
@@ -31,19 +37,32 @@ app.get("/results", (req, res, next) => {
   const myTerm = req.query.searchTerm;
   const myCheckbox = req.query.interestThing;
 
-    if (myCheckbox === "on") {
-      res.render("pizza-results.ejs", {
-        theSearch: myTerm
-      });
-    }
-    else {
-      res.render("results-view.ejs", {
-        theSearch: myTerm
-      });
-    }
+  if (myCheckbox === "on") {
+    res.render("pizza-results.ejs", {
+      theSearch: myTerm
+    });
+  } else {
+    res.render("results-view.ejs", {
+      theSearch: myTerm
+    });
+  }
 });
 
+app.get("/login", (req, res, next) => {
+  res.render("login-form-view.ejs");
+});
 
+app.post("/check-login", (req, res, next) => {
+  const userEmail = req.body.emailValue;
+  const userPass = req.body.passwordValue;
+
+  if (userEmail === "a@a.a" && userPass === "swordfish") {
+    res.render("welcome-view.ejs");
+  }
+  else {
+    res.render("go-away-view.ejs");
+  }
+});
 //---------------------------------------------------
 
 
